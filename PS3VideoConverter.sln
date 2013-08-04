@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS3VideoConverter", "PS3VideoConverter\PS3VideoConverter.csproj", "{D530499A-85BE-4171-8A73-6E2227A81C2E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversionEngine", "ConversionEngine\ConversionEngine.csproj", "{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Debug|x86.ActiveCfg = Debug|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Debug|x86.Build.0 = Debug|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Release|Any CPU.ActiveCfg = Release|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Release|x86.ActiveCfg = Release|x86
+		{D530499A-85BE-4171-8A73-6E2227A81C2E}.Release|x86.Build.0 = Release|x86
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9A9B598C-3D1D-42D5-9AFD-7818D4174B57}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
