@@ -26,20 +26,25 @@ namespace PS3VideoConverter
             this.buttonStart_Click(this, new EventArgs());
         }
 
-        private void SearchForConvertableFiles()
+        private List<ConversionEntity> SearchForConvertableFiles(DirectoryInfo directory)
         {
-            string startupPath = Application.StartupPath;
+            List<ConversionEntity> conversionEntities = new List<ConversionEntity>();
 
-            List<string> filePaths = Directory.GetFiles(startupPath).ToList();
+            foreach (DirectoryInfo info in directory.GetDirectories())
+            {
+                if (!info.Name.Equals("Originals"))
+                {
+                    conversionEntities.AddRange(SearchForConvertableFiles(info));
+                }
+            }
 
+            List<string> filePaths = Directory.GetFiles(directory.FullName).ToList();
 
             List<string> fileNames = (from fileName in filePaths
                                       where ((fileName.EndsWith(".avi") && !fileName.Contains("[CONVERTED]"))                                      
                                       && !(from convertedFileName in filePaths where convertedFileName.Equals(fileName.Replace(".avi", ".[CONVERTED].avi")) select convertedFileName).Any()
                                       )
-                                      select fileName).ToList();
-
-            List<ConversionEntity> conversionEntities = new List<ConversionEntity>();
+                                      select fileName).ToList();            
 
             foreach (string fileName in fileNames)
             {
@@ -50,12 +55,21 @@ namespace PS3VideoConverter
                 {
                     entity.SubtitlesFileName = fileName.Replace(".avi", ".srt").Replace(Application.StartupPath, ".");
                 }
+                else
+                {
+                    if (!directory.Name.Equals("ES"))
+                        continue;
+                }
                 entity.ConvertedFileName = fileName.Replace(".avi", ".[CONVERTED].avi").Replace(Application.StartupPath, ".");
 
                 entity.OriginalPostconversionDestinationFolder = Application.StartupPath + "\\Originals";
                 conversionEntities.Add(entity);                
             }
+            return conversionEntities;
+        }
 
+        private void ConvertFiles(List<ConversionEntity> conversionEntities)
+        {
             foreach (ConversionEntity conversionEntity in conversionEntities)
             {
                 Task conversionTask = new Task(conversionEntity);
@@ -66,8 +80,11 @@ namespace PS3VideoConverter
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            SearchForConvertableFiles();
-
+            
+            string startPath = Application.StartupPath;
+            DirectoryInfo rootFolder = new DirectoryInfo(@"D:\Series");
+            List<ConversionEntity> entities = SearchForConvertableFiles(rootFolder);
+            ConvertFiles(entities);
             //object aux = System.Configuration.ConfigurationSettings.GetConfig("ConversionEngine");
         }
     }
