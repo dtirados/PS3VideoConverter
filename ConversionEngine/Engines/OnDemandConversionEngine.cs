@@ -27,42 +27,34 @@ namespace Dts.Projects.VideoConverter.ConversionEngine.Engines
 
         private void ExecuteCommandSynchronously(Task task)
         {
-            try
-            {
-                // create the ProcessStartInfo using "cmd" as the program to be run,
-                // and "/c " as the parameters.
-                // Incidentally, /c tells cmd that we want it to execute the command that follows,
-                // and then exit.
-                System.Diagnostics.ProcessStartInfo procStartInfo =
-                    new System.Diagnostics.ProcessStartInfo("cmd", "/c " + task.GetCommand());                               
+            // create the ProcessStartInfo using "cmd" as the program to be run,
+            // and "/c " as the parameters.
+            // Incidentally, /c tells cmd that we want it to execute the command that follows,
+            // and then exit.
+            System.Diagnostics.ProcessStartInfo procStartInfo =
+                new System.Diagnostics.ProcessStartInfo("cmd", "/c " + task.GetCommand());
 
-                // The following commands are needed to redirect the standard output.
-                // This means that it will be redirected to the Process.StandardOutput StreamReader.
-                procStartInfo.RedirectStandardOutput = false;
-                procStartInfo.UseShellExecute = false;
-                // Do not create the black window.
-                procStartInfo.CreateNoWindow = true;
-                // Now we create a process, assign its ProcessStartInfo and start it
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                proc.StartInfo = procStartInfo;
+            // The following commands are needed to redirect the standard output.
+            // This means that it will be redirected to the Process.StandardOutput StreamReader.
+            procStartInfo.RedirectStandardOutput = false;
+            procStartInfo.UseShellExecute = false;
+            // Do not create the black window.
+            procStartInfo.CreateNoWindow = true;
+            // Now we create a process, assign its ProcessStartInfo and start it
+            System.Diagnostics.Process proc = new System.Diagnostics.Process();
+            proc.StartInfo = procStartInfo;
 
-                proc.Exited  += new EventHandler(proc_Exited);
-                
-                proc.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(proc_OutputDataReceived);
-                proc.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(proc_ErrorDataReceived);
-                proc.Start();
-                proc.WaitForExit();                                
-                // Get the output into a string
-                //string result = proc.StandardOutput.ReadToEnd();
-                task.OnFinishAction();
-                // Display the command output.
-                //Console.WriteLine(result);
-            }
-            catch (Exception objException)
-            {
-                // Log the exception
-                bool exception = true;
-            }
+            proc.Exited += new EventHandler(proc_Exited);
+
+            proc.OutputDataReceived += new System.Diagnostics.DataReceivedEventHandler(proc_OutputDataReceived);
+            proc.ErrorDataReceived += new System.Diagnostics.DataReceivedEventHandler(proc_ErrorDataReceived);
+            proc.Start();
+            proc.WaitForExit();
+            // Get the output into a string
+            //string result = proc.StandardOutput.ReadToEnd();
+            task.OnFinishAction();
+            // Display the command output.
+            //Console.WriteLine(result);
         }
 
         void proc_ErrorDataReceived(object sender, System.Diagnostics.DataReceivedEventArgs e)

@@ -27,37 +27,35 @@ namespace Dts.Projects.VideoConverter.ConversionEngine.Entities
         {
             StringBuilder command = new StringBuilder();
             command.Append(@"mencoder ");
+            command.Append("\"");
             command.Append(Entity.FileName);
+            command.Append("\"");
             command.Append("  -channels 6 -ovc xvid -xvidencopts fixed_quant=4 -vf harddup -oac copy ");
             if (!string.IsNullOrEmpty(Entity.SubtitlesFileName))
             {
-                command.Append(string.Format(" -sub {0} ", Entity.SubtitlesFileName));
+                command.Append(string.Format(" -sub {0}{1}{0} ", "\"", Entity.SubtitlesFileName));
             }
-            command.Append (string.Format (" -o {0} ",  Entity.ConvertedFileName));
+            command.Append (string.Format (" -o {0}{1}{0} ",  "\"", Entity.ConvertedFileName));
             return command.ToString();
         }
 
         protected virtual void InternalFinishAction()
         {
-            try
+            if (File.Exists(Entity.ConvertedFileName))
             {
-                if (File.Exists(Entity.ConvertedFileName))
+                if (Entity.OriginalPostconversionDestinationFolder != null)
                 {
-                    if (Entity.OriginalPostconversionDestinationFolder != null)
+                    FileInfo originalFile = new FileInfo(Entity.FileName);
+
+                    if (!Directory.Exists(Entity.OriginalPostconversionDestinationFolder))
                     {
-                        FileInfo originalFile = new FileInfo(Entity.FileName);
-
-                        if (!Directory.Exists(Entity.OriginalPostconversionDestinationFolder))
-                        {
-                            Directory.CreateDirectory(Entity.OriginalPostconversionDestinationFolder);
-                        }
-
-                        originalFile.MoveTo(Entity.OriginalPostconversionDestinationFolder + "\\" + originalFile.Name);
+                        Directory.CreateDirectory(Entity.OriginalPostconversionDestinationFolder);
                     }
+
+                    string destinationPath = Path.Combine(Entity.OriginalPostconversionDestinationFolder, originalFile.Name);
+
+                    originalFile.MoveTo(destinationPath);
                 }
-            }
-            catch (Exception ex)
-            {
             }
         }
 

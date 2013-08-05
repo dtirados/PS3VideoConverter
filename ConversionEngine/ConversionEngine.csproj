@@ -46,6 +46,7 @@
     <Compile Include="Engines\OnDemandConversionEngine.cs" />
     <Compile Include="Entities\ConversionEntity.cs" />
     <Compile Include="Entities\Task.cs" />
+    <Compile Include="Helpers\CopyFileHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

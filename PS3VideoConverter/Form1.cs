@@ -10,6 +10,7 @@ using System.Threading;
 using System.IO;
 using Dts.Projects.VideoConverter.ConversionEngine.Entities;
 using Dts.Projects.VideoConverter.ConversionEngine.Engines;
+using Dts.Projects.VideoConverter.ConversionEngine.Helpers;
 
 namespace PS3VideoConverter
 {
@@ -23,7 +24,19 @@ namespace PS3VideoConverter
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Hide();
-            this.buttonStart_Click(this, new EventArgs());
+            FeedFilesListBox();
+        }
+
+        private void FeedFilesListBox()
+        {
+            string startPath = Application.StartupPath;
+            DirectoryInfo rootFolder = new DirectoryInfo(@"D:\Series");
+            List<ConversionEntity> entities = SearchForConvertableFiles(rootFolder);
+            checkedListBoxFiles.Items.Clear();
+            foreach (ConversionEntity entity in entities)
+            {
+                checkedListBoxFiles.Items.Add(entity);
+            }
         }
 
         private List<ConversionEntity> SearchForConvertableFiles(DirectoryInfo directory)
@@ -48,44 +61,54 @@ namespace PS3VideoConverter
 
             foreach (string fileName in fileNames)
             {
-                ConversionEntity entity = new ConversionEntity();
-                entity.FileName = fileName.Replace(Application.StartupPath,".");
-                string subtitlesFileName = fileName.Replace(".avi",".srt");
-                if (File.Exists(subtitlesFileName))
+                if (!CopyFileHelper.HasInvalidChars(fileName))
                 {
-                    entity.SubtitlesFileName = fileName.Replace(".avi", ".srt").Replace(Application.StartupPath, ".");
-                }
-                else
-                {
-                    if (!directory.Name.Equals("ES"))
-                        continue;
-                }
-                entity.ConvertedFileName = fileName.Replace(".avi", ".[CONVERTED].avi").Replace(Application.StartupPath, ".");
+                    ConversionEntity entity = new ConversionEntity();
+                    entity.FileName = fileName;//.Replace(Application.StartupPath,".");
+                    string subtitlesFileName = fileName.Replace(".avi", ".srt");
+                    if (File.Exists(subtitlesFileName))
+                    {
+                        entity.SubtitlesFileName = fileName.Replace(".avi", ".srt").Replace(Application.StartupPath, ".");
+                    }
+                    else
+                    {
+                        if (!directory.Name.Equals("ES"))
+                            continue;
+                    }
+                    entity.ConvertedFileName = fileName.Replace(".avi", ".[CONVERTED].avi").Replace(Application.StartupPath, ".");
 
-                entity.OriginalPostconversionDestinationFolder = Application.StartupPath + "\\Originals";
-                conversionEntities.Add(entity);                
+                    entity.OriginalPostconversionDestinationFolder = directory.FullName + "\\Originals";
+                    conversionEntities.Add(entity);
+                }
             }
             return conversionEntities;
         }
 
-        private void ConvertFiles(List<ConversionEntity> conversionEntities)
+        private void btnStartConversion_Click(object sender, EventArgs e)
         {
-            foreach (ConversionEntity conversionEntity in conversionEntities)
-            {
-                Task conversionTask = new Task(conversionEntity);
-                OnDemandConversionEngine.ExecuteCommand(conversionTask);
-            }
-            Application.Exit();
+            ConvertSelectedFiles();
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void ConvertSelectedFiles()
         {
-            
-            string startPath = Application.StartupPath;
-            DirectoryInfo rootFolder = new DirectoryInfo(@"D:\Series");
-            List<ConversionEntity> entities = SearchForConvertableFiles(rootFolder);
-            ConvertFiles(entities);
-            //object aux = System.Configuration.ConfigurationSettings.GetConfig("ConversionEngine");
+            listBoxConverted.Items.Clear();
+            foreach (ConversionEntity entity in checkedListBoxFiles.SelectedItems)
+            {
+                Task conversionTask = new Task(entity);
+                try
+                {
+                    OnDemandConversionEngine.ExecuteCommand(conversionTask);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + ex.StackTrace);
+                }
+            }
+        }
+
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            FeedFilesListBox();
         }
     }
 }
